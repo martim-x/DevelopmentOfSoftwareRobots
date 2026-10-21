@@ -232,3 +232,12 @@ Renders/
 *.aep.lock
 Adobe Premiere Pro Auto-Save/
 Adobe After Effects Auto-Save/
+
+# === UiPath / RPA проекты ===
+.objects/
+.local/
+.tmh/
+.entities/
+.templates/
+.project/
+*.uiproj
