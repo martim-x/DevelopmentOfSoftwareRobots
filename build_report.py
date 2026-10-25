@@ -1,28 +1,31 @@
 """Сборка отчёта билдером BstuReportBuilder на Windows без LibreOffice/poppler.
 
-Билдер (`app`) используется как библиотека: его build()/prune_media()/fix_spacing()
-вызываются без изменений. Недостающие внешние утилиты заменяются:
-  * docx -> PDF   : Microsoft Word (COM), уже проверено на этой машине;
-  * номера страниц: PyMuPDF вместо `pdfinfo`/`pdftotext` (модуль app/toc.py
-    патчится в runtime, файлы репозитория не меняются).
+Билдер (`app`) используется как библиотека: его файлы не изменяются.
+Недостающие внешние утилиты заменяются:
+  * docx -> PDF   : Microsoft Word (COM), проверено на этой машине;
+  * номера страниц: PyMuPDF вместо `pdfinfo`/`pdftotext`.
+
+Порядок (как в `app build`): один проход сборки -> PDF -> номера страниц
+заголовков -> патч поля оглавления в готовом docx -> PDF для контроля.
 
 Запуск:
-    py -3.13 build_report.py <report.json> <out.docx> [--check]
+    py -3.13 build_report.py <report.json> <out.docx> [--check] [--single-pass]
 """
 import os
-import re
 import sys
 
 BUILDER = r"C:\Users\timof\Documents\Visual Studio Code\BstuReportBuilder"
 sys.path.insert(0, BUILDER)
 
 import pymupdf  # noqa: E402
-from app import builder as builder_mod  # noqa: E402
-from app import toc as toc_mod  # noqa: E402
-from app.builder import DEFAULT_TEMPLATE, build, prune_media  # noqa: E402
 from app.checks import check  # noqa: E402
 from app.model import Model  # noqa: E402
-from app.spacing import fix as fix_spacing  # noqa: E402
+from app.render.docx_builder import DEFAULT_TEMPLATE, build  # noqa: E402
+from app.render.docx_toc_patch import patch_toc_pages  # noqa: E402
+from app.render.media import prune_media  # noqa: E402
+from app.render.spacing import fix as fix_spacing  # noqa: E402
+from app.rules import Severity  # noqa: E402
+from app.toc import page_numbers  # noqa: E402
 
 PDF_FMT = 17  # wdFormatPDF
 
@@ -36,6 +39,7 @@ def word_to_pdf(docx_path):
     """
     import shutil
     import tempfile
+
     import pythoncom
     import win32com.client as win32
 
@@ -51,7 +55,6 @@ def word_to_pdf(docx_path):
     try:
         doc = word.Documents.Open(os.path.abspath(docx_path), ReadOnly=True)
         try:
-            # ExportAsFixedFormat надёжнее SaveAs на этой машине
             doc.ExportAsFixedFormat(tmp, PDF_FMT)
         finally:
             doc.Close(False)
@@ -64,12 +67,8 @@ def word_to_pdf(docx_path):
     return out
 
 
-def _pdf_total_pages(pdf_path):
-    with pymupdf.open(pdf_path) as d:
-        return d.page_count
-
-
-def _page_texts(pdf_path):
+def page_texts(pdf_path):
+    """Текст страниц PDF {номер: нормализованная строка} — замена pdftotext."""
     flat = {}
     with pymupdf.open(pdf_path) as d:
         for i, page in enumerate(d, start=1):
@@ -77,45 +76,51 @@ def _page_texts(pdf_path):
     return flat
 
 
+def build_one(report_path, out_path, single_pass=False):
+    model = Model.load(report_path)
+    entries = build(model, out_path, template=DEFAULT_TEMPLATE)
+    prune_media(out_path)
+    fix_spacing(out_path)
+
+    if not single_pass:
+        pdf = word_to_pdf(out_path)
+        pages = page_numbers(entries, pdf, flat=page_texts(pdf))
+        patch_toc_pages(out_path, pages)
+        prune_media(out_path)
+        fix_spacing(out_path)
+        filled = len(pages)
+        total = sum(1 for e in entries if e["anchor"])
+        print(f"оглавление: номера страниц для {filled} из {total} заголовков")
+    else:
+        pages = {}
+
+    pdf = word_to_pdf(out_path)
+    print(f"pdf: {pdf} ({os.path.getsize(pdf) // 1024} КБ, "
+          f"{pymupdf.open(pdf).page_count} стр.)")
+    print(f"готово: {out_path} ({os.path.getsize(out_path) // 1024} КБ)")
+    return model, pages
+
+
 def main(argv):
     if len(argv) < 3:
         print(__doc__)
         return 2
     report_path, out_path = argv[1], argv[2]
-    do_check = "--check" in argv[3:]
+    flags = argv[3:]
+    model, _ = build_one(report_path, out_path, "--single-pass" in flags)
 
-    # подмена внешних утилит в модуле app.toc (файлы репозитория не меняются)
-    toc_mod.pdf_total_pages = _pdf_total_pages
-    toc_mod.page_texts = _page_texts
-
-    model = Model.load(report_path)
-    template = DEFAULT_TEMPLATE
-
-    # проход 1 — вёрстка без номеров страниц
-    entries = build(model, out_path, template=template)
-    prune_media(out_path)
-    fixed = fix_spacing(out_path)
-
-    # PDF для второго прохода
-    pdf = word_to_pdf(out_path)
-    pages = toc_mod.page_numbers(entries, pdf)
-
-    # проход 2 — оглавление с номерами страниц
-    entries = build(model, out_path, pages=pages, template=template)
-    prune_media(out_path)
-    fixed = fix_spacing(out_path)
-
-    filled = len(pages)
-    total = sum(1 for e in entries if e["anchor"])
-    print(f"оглавление: номера страниц для {filled} из {total} заголовков")
-    print(f"готово: {out_path} ({os.path.getsize(out_path) // 1024} КБ), "
-          f"стыков исправлено: {fixed}")
-    print(f"pdf: {pdf} ({os.path.getsize(pdf) // 1024} КБ)")
-
-    if do_check:
-        errors = check(out_path, model)
-        return 1 if errors else 0
-    return 0
+    if "--check" not in flags:
+        return 0
+    findings = check(out_path, model)
+    errors = [f for f in findings if f.severity == Severity.ERROR]
+    warns = [f for f in findings if f.severity == Severity.WARNING]
+    for f in errors:
+        print(f"ОШИБКА [{f.code}] {f.message}"
+              + (f" ({f.clause})" if f.clause else ""))
+    for f in warns:
+        print(f"ПРЕДУПРЕЖДЕНИЕ [{f.code}] {f.message}")
+    print(f"проверка: ошибок {len(errors)}, предупреждений {len(warns)}")
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":

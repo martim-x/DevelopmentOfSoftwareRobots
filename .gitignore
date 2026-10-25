@@ -241,3 +241,7 @@ Adobe After Effects Auto-Save/
 .templates/
 .project/
 *.uiproj
+
+# === Отчёты лабораторных: каталог build/ внутри labN — это исходники
+# отчёта (report.json) и скрины, а не артефакты сборки Python ===
+!lab*/build/

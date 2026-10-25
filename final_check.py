@@ -38,8 +38,10 @@ def check(path):
     for t in texts:
         if t in caps:
             continue
-        for m in re.finditer(r"рисун[а-яё]*\s+(\d+\.\d+)", t, re.I):
-            refs[m.group(1)] += 1
+        for m in re.finditer(r"рисун[а-яё]*\s+(\d+\.\d+(?:\s*,\s*\d+\.\d+)*)",
+                             t, re.I):
+            for num in re.findall(r"\d+\.\d+", m.group(1)):
+                refs[num] += 1
     no_ref = [n for n in nums if refs.get(n, 0) == 0]
 
     body = "\n".join(texts)
