@@ -1,95 +1,120 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Initialize Applications"
- xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
- xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
- xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
- xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
- xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
- xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
- xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
- xmlns:ss="clr-namespace:System.Security;assembly=mscorlib"
- xmlns:ui="http://schemas.uipath.com/workflow/activities"
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sads sap sap2010" x:Class="Initialize Applications" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ss="clr-namespace:System.Security;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property sap2010:Annotation.AnnotationText="Dictionary structure to store configuration data. This structure can be used to store, for example, an URL for a system that needs to be initialized. &#xA;It is not recommended to use it to store credentials; instead, store them on Orchestrator and just pass the name of the credential asset as a setting in this dictionary. Then use the GetAppCredentials workflow to retrieve the credentials securely." Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
   </x:Members>
-  <mva:VisualBasic.Settings>
+  <VisualBasic.Settings>
     <x:Null />
-  </mva:VisualBasic.Settings>
+  </VisualBasic.Settings>
   <sap2010:WorkflowViewState.IdRef>Initialization_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
-      <x:String>System.Activities.XamlIntegration</x:String>
-      <x:String>System.Activities.Validation</x:String>
-      <x:String>System.Activities</x:String>
-      <x:String>System.Activities.Statements</x:String>
-      <x:String>System.Activities.Expressions</x:String>
       <x:String>Microsoft.VisualBasic</x:String>
       <x:String>Microsoft.VisualBasic.Activities</x:String>
       <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
       <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
       <x:String>System.Data</x:String>
       <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
       <x:String>System.IO</x:String>
       <x:String>System.Linq</x:String>
       <x:String>System.Management.Automation</x:String>
       <x:String>System.Net.Mail</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>System.Windows.Markup</x:String>
       <x:String>System.Xml</x:String>
       <x:String>System.Xml.Linq</x:String>
-      <x:String>System.Windows.Markup</x:String>
-      <x:String>System.Drawing</x:String>
       <x:String>UiPath.Core</x:String>
-      <x:String>UiPath.Framework.Activities</x:String>
-      <x:String>System.Security</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
-      <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
-      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
       <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
       <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
       <AssemblyReference>System.Management.Automation</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>System.Xml</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationNext</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
       <AssemblyReference>WindowsBase</AssemblyReference>
-      <AssemblyReference>PresentationCore</AssemblyReference>
-      <AssemblyReference>System.Xaml</AssemblyReference>
-      <AssemblyReference>System.ServiceModel</AssemblyReference>
-      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
-      <AssemblyReference>System.Drawing</AssemblyReference>
-      <AssemblyReference>UiPath.Core</AssemblyReference>
-      <AssemblyReference>UiPath.Framework.Activities</AssemblyReference>
-      <AssemblyReference>TimeSpan2</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="Open applications used in the process and do necessary initialization procedures (e.g., login)." DisplayName="Initialize All Applications" sap2010:WorkflowViewState.IdRef="Sequence_9">
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,91" Id="LogMessage_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,87" Id="InvokeWorkflowFile_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,168" Id="TypeInto_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,168" Id="TypeSecureText_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,106" Id="Click_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,106" Id="ElementExists_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,91" Id="LogMessage_2" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,87" Id="If_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,402" Id="Sequence_10">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="314,87" Id="OpenApplication_1" />
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="336,257" Id="Sequence_9">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData sap:VirtualizedContainerService.HintSize="376,337" Id="Initialization_1" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+  <Sequence sap2010:Annotation.AnnotationText="Open applications used in the process and do necessary initialization procedures (e.g., login)." DisplayName="Initialize All Applications" sap2010:WorkflowViewState.IdRef="Sequence_9" sads:DebugSymbol.Symbol="d1RDOlxVc2Vyc1xNYXRldXMgQ3J1elxEb2N1bWVudHNcR2l0SHViXFJlRnJhbWVXb3JrXEZyYW1ld29ya1xJbml0QWxsQXBwbGljYXRpb25zLnhhbWwDRANHDgIBAUUFRakBAgECRY0BRaYBAgED">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="UserName" />
       <Variable x:TypeArguments="ss:SecureString" Name="Password" />
       <Variable x:TypeArguments="x:Boolean" Name="UIDemo_LoginSuccess" />
     </Sequence.Variables>
-    <ui:LogMessage DisplayName="Log App Initialization message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="Opening applications..." />
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetAppCredentials workflow" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Framework\GetAppCredentials.xaml">
+    <ui:LogMessage DisplayName="Log App Initialization message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[&quot;Opening applications...&quot;]" />
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke GetAppCredentials workflow" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Framework\GetAppCredentials.xaml">
       <ui:InvokeWorkflowFile.Arguments>
         <InArgument x:TypeArguments="x:String" x:Key="in_Credential">["UIDemo_Credential"]</InArgument>
         <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[UserName]</OutArgument>
         <OutArgument x:TypeArguments="ss:SecureString" x:Key="out_Password">[Password]</OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <ui:OpenApplication ApplicationWindow="{x:Null}" Arguments="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Open application (UIDemo)" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="OpenApplication_1" FileName="[in_Config(&quot;UIDemo_ApplicationPath&quot;).ToString]" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;" TimeoutMS="30000" WorkingDirectory="{x:Null}">
+    <ui:OpenApplication ApplicationWindow="{x:Null}" Arguments="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Open application (UIDemo)" FileName="[in_Config(&quot;UIDemo_ApplicationPath&quot;).ToString]" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="OpenApplication_1" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;" TimeoutMS="30000">
       <ui:OpenApplication.Body>
         <ActivityAction x:TypeArguments="x:Object">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
           </ActivityAction.Argument>
           <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="314,402" sap2010:WorkflowViewState.IdRef="Sequence_10">
-            <ui:TypeInto ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'Username'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_1" SimulateType="True" Text="[UserName]">
+            <ui:TypeInto ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" AlterIfDisabled="True" DisplayName="Type Into 'Username'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_1" SimulateType="True" Text="[UserName]">
               <ui:TypeInto.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='1' /&gt;">
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="b5762b39-d6d2-4fe5-bd55-c687b20e7651" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='1' /&gt;">
                   <ui:Target.TimeoutMS>
                     <InArgument x:TypeArguments="x:Int32" />
                   </ui:Target.TimeoutMS>
@@ -99,9 +124,9 @@
                 </ui:Target>
               </ui:TypeInto.Target>
             </ui:TypeInto>
-            <ui:TypeSecureText ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Secure Text 'Password'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeSecureText_1" SecureText="[Password]" SimulateType="True">
+            <ui:TypeSecureText ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" AlterIfDisabled="True" DisplayName="Type Secure Text 'Password'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeSecureText_1" SecureText="[Password]" SimulateType="True">
               <ui:TypeSecureText.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='2' /&gt;">
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="4ca58c2a-e596-4eb5-b0e2-eacbe9566514" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='2' /&gt;">
                   <ui:Target.TimeoutMS>
                     <InArgument x:TypeArguments="x:Int32" />
                   </ui:Target.TimeoutMS>
@@ -111,9 +136,19 @@
                 </ui:Target>
               </ui:TypeSecureText.Target>
             </ui:TypeSecureText>
-            <ui:Click DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Log In'" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT" SimulateClick="True">
+            <ui:Click DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" AlterIfDisabled="True" ClickType="CLICK_SINGLE" DisplayName="Click 'Log In'" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT" SimulateClick="True">
+              <ui:Click.CursorPosition>
+                <ui:CursorPosition Position="Center">
+                  <ui:CursorPosition.OffsetX>
+                    <InArgument x:TypeArguments="x:Int32" />
+                  </ui:CursorPosition.OffsetX>
+                  <ui:CursorPosition.OffsetY>
+                    <InArgument x:TypeArguments="x:Int32" />
+                  </ui:CursorPosition.OffsetY>
+                </ui:CursorPosition>
+              </ui:Click.CursorPosition>
               <ui:Click.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.BUTTON.app.0.34f5582_r6_ad1' /&gt;">
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="5dfaab1b-1f7c-438d-8fa3-db7da984ca32" Selector="&lt;wnd app='uidemo.exe' title='UIDemo Login' /&gt;&lt;wnd cls='WindowsForms10.BUTTON.app.0.34f5582_r6_ad1' /&gt;">
                   <ui:Target.TimeoutMS>
                     <InArgument x:TypeArguments="x:Int32" />
                   </ui:Target.TimeoutMS>
@@ -123,9 +158,9 @@
                 </ui:Target>
               </ui:Click.Target>
             </ui:Click>
-            <ui:UiElementExists ContinueOnError="{x:Null}" DisplayName="Element Exists (UIDemo_LoginSuccess)" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="ElementExists_1" Exists="[UIDemo_LoginSuccess]">
+            <ui:UiElementExists DisplayName="Element Exists (UIDemo_LoginSuccess)" Exists="[UIDemo_LoginSuccess]" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="ElementExists_1">
               <ui:UiElementExists.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.STATIC.app.0.34f5582_r6_ad1' idx='1' /&gt;">
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="af5e846e-4b77-4196-a917-f057598b1103" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.STATIC.app.0.34f5582_r6_ad1' idx='1' /&gt;">
                   <ui:Target.TimeoutMS>
                     <InArgument x:TypeArguments="x:Int32" />
                   </ui:Target.TimeoutMS>
@@ -144,35 +179,5 @@
         </ActivityAction>
       </ui:OpenApplication.Body>
     </ui:OpenApplication>
-    <sads:DebugSymbol.Symbol>d1RDOlxVc2Vyc1xNYXRldXMgQ3J1elxEb2N1bWVudHNcR2l0SHViXFJlRnJhbWVXb3JrXEZyYW1ld29ya1xJbml0QWxsQXBwbGljYXRpb25zLnhhbWwDRANHDgIBAUUFRakBAgECRY0BRaYBAgED</sads:DebugSymbol.Symbol>
   </Sequence>
-  <sap2010:WorkflowViewState.ViewStateManager>
-    <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="LogMessage_1" sap:VirtualizedContainerService.HintSize="314,91" />
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="314,87" />
-      <sap2010:ViewStateData Id="TypeInto_1" sap:VirtualizedContainerService.HintSize="314,168" />
-      <sap2010:ViewStateData Id="TypeSecureText_1" sap:VirtualizedContainerService.HintSize="314,168" />
-      <sap2010:ViewStateData Id="Click_1" sap:VirtualizedContainerService.HintSize="314,106" />
-      <sap2010:ViewStateData Id="ElementExists_1" sap:VirtualizedContainerService.HintSize="314,106" />
-      <sap2010:ViewStateData Id="LogMessage_2" sap:VirtualizedContainerService.HintSize="314,91" />
-      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="314,87" />
-      <sap2010:ViewStateData Id="Sequence_10" sap:VirtualizedContainerService.HintSize="314,402">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="OpenApplication_1" sap:VirtualizedContainerService.HintSize="314,87" />
-      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="336,257">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Initialization_1" sap:VirtualizedContainerService.HintSize="376,337" />
-    </sap2010:ViewStateManager>
-  </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

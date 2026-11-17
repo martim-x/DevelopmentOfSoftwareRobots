@@ -4,10 +4,10 @@
   "description": "UiPath REFramework Template",
   "main": "Main.xaml",
   "dependencies": {
-    "UiPath.System.Activities": "18.3.6877.28276",
-    "UiPath.UIAutomation.Activities": "19.10.1",
-    "UiPath.Excel.Activities": "2.8.5",
-    "UiPath.Credentials.Activities": "2.0.0"
+    "UiPath.Credentials.Activities": "2.0.0",
+    "UiPath.Excel.Activities": "2.11.4",
+    "UiPath.System.Activities": "21.10.6",
+    "UiPath.UIAutomation.Activities": "21.10.10"
   },
   "webServices": [],
   "entitiesStores": [],
@@ -36,7 +36,6 @@
     "projectProfile": "Developement",
     "outputType": "Process",
     "libraryOptions": {
-      "includeOriginalXaml": false,
       "privateWorkflows": []
     },
     "processOptions": {
@@ -50,5 +49,5 @@
   "isTemplate": false,
   "templateProjectData": {},
   "publishData": {},
-  "targetFramework": "Legacy"
+  "targetFramework": "Windows"
 }
