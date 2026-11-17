@@ -57,6 +57,8 @@
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:Annotation.AnnotationText="Do necessary procedures for ending the process (e.g., logout) and close the applications used in the process." DisplayName="Close All Applications" sap2010:WorkflowViewState.IdRef="Sequence_2">
     <ui:LogMessage DisplayName="Log message (close applications)" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="Closing applications..." />
+    <ui:KillProcess ContinueOnError="{x:Null}" DisplayName="Kill process (excel)" sap2010:WorkflowViewState.IdRef="KillProcess_1" Process="{x:Null}" ProcessName="excel" />
+    <ui:KillProcess ContinueOnError="{x:Null}" DisplayName="Kill process (UIDemo)" sap2010:WorkflowViewState.IdRef="KillProcess_2" Process="{x:Null}" ProcessName="UIDemo" />
     <sads:DebugSymbol.Symbol>d1VDOlxVc2Vyc1xNYXRldXMgQ3J1elxEb2N1bWVudHNcR2l0SHViXFJlRnJhbWVXb3JrXEZyYW1ld29ya1xDbG9zZUFsbEFwcGxpY2F0aW9ucy54YW1sAzoDPQ4CAQE7BTukAQIBAjuIATuhAQIBAw==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>

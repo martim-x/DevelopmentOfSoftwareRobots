@@ -16,7 +16,7 @@
     <x:Property sap2010:Annotation.AnnotationText="Dictionary structure to store configuration data." Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
     <x:Property sap2010:Annotation.AnnotationText="Exception variable that is used during transitions between states." Name="in_SystemError" Type="InArgument(s:Exception)" />
     <x:Property sap2010:Annotation.AnnotationText="Exception variable that is used during transitions between states." Name="in_BusinessRuleException" Type="InArgument(ui:BusinessRuleException)" />
-    <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed." Name="in_TransactionItem" Type="InArgument(ui:QueueItem)" />
+    <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed." Name="in_TransactionItem" Type="InArgument(sd:DataRow)" />
     <x:Property sap2010:Annotation.AnnotationText="This variable controls the number of attempts of retrying the process in case of System Error." Name="io_RetryNumber" Type="InOutArgument(x:Int32)" />
     <x:Property sap2010:Annotation.AnnotationText="Sequential counter of transaction items." Name="io_TransactionNumber" Type="InOutArgument(x:Int32)" />
     <x:Property sap2010:Annotation.AnnotationText="Allow the optional addition of information about the transaction item." Name="in_TransactionField1" Type="InArgument(x:String)" />
@@ -81,13 +81,10 @@
         <FlowDecision.True>
           <FlowStep x:Name="__ReferenceID16" sap2010:WorkflowViewState.IdRef="FlowStep_10">
             <Sequence sap2010:Annotation.AnnotationText="If the transaction item is processed without any exceptions, its status is updated as Successful.&#xA;" DisplayName="Success" sap2010:WorkflowViewState.IdRef="Sequence_6">
-              <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(Uipath.Core.QueueItem))]" DisplayName="If TransactionItem is a QueueItem (Success)" sap2010:WorkflowViewState.IdRef="If_2">
+              <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(System.Data.DataRow))]" DisplayName="If TransactionItem is a QueueItem (Success)" sap2010:WorkflowViewState.IdRef="If_2">
                 <If.Then>
-                  <ui:SetTransactionStatus ContinueOnError="{x:Null}" Reason="{x:Null}" ServiceBaseAddress="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Set transaction status (Successful)" ErrorType="Application" Status="Successful" TransactionItem="[in_TransactionItem]">
-                    <ui:SetTransactionStatus.Output>
-                      <scg:Dictionary x:TypeArguments="x:String, InArgument" />
-                    </ui:SetTransactionStatus.Output>
-                  </ui:SetTransactionStatus>
+                  <ui:WriteCell Cell="[&quot;D&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (status)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_1" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Успешно" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
+                  <ui:WriteCell Cell="[&quot;E&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (comment)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_2" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Обработано!" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
                 </If.Then>
               </If>
               <Sequence sap2010:Annotation.AnnotationText="Includes custom log fields to the log message.&#xA;They are removed after logging to prevent duplicated status messages about a single transaction." DisplayName="Log Successful with additional logging fields" sap2010:WorkflowViewState.IdRef="Sequence_9">
@@ -143,13 +140,10 @@
             <FlowDecision.True>
               <FlowStep x:Name="__ReferenceID14" sap2010:WorkflowViewState.IdRef="FlowStep_1">
                 <Sequence sap2010:Annotation.AnnotationText="If a BussinessRuleException is thrown during the process, the transaction item's status is updated as Failed (BusinessRuleException).&#xA;" DisplayName="Business Rule Exception" sap2010:WorkflowViewState.IdRef="Sequence_3">
-                  <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(Uipath.Core.QueueItem))]" DisplayName="If TransactionItem is a QueueItem (BusinessRuleException)" sap2010:WorkflowViewState.IdRef="If_3">
+                  <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(System.Data.DataRow))]" DisplayName="If TransactionItem is a QueueItem (BusinessRuleException)" sap2010:WorkflowViewState.IdRef="If_3">
                     <If.Then>
-                      <ui:SetTransactionStatus ContinueOnError="{x:Null}" ServiceBaseAddress="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Set transaction status (BusinessRuleException status" ErrorType="Business" sap2010:WorkflowViewState.IdRef="SetTransactionStatus_2" Reason="[in_BusinessRuleException.Message]" Status="Failed" TransactionItem="[in_TransactionItem]">
-                        <ui:SetTransactionStatus.Output>
-                          <scg:Dictionary x:TypeArguments="x:String, InArgument" />
-                        </ui:SetTransactionStatus.Output>
-                      </ui:SetTransactionStatus>
+                      <ui:WriteCell Cell="[&quot;D&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (status)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_3" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Пропущено" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
+                      <ui:WriteCell Cell="[&quot;E&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (comment)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_4" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="[in_BusinessRuleException.Message]" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
                     </If.Then>
                   </If>
                   <Sequence sap2010:Annotation.AnnotationText="Includes custom log fields to the log message.&#xA;They are removed after logging to prevent duplicated status messages about a single transaction." DisplayName="Log BusinessRuleException with additional logging fields" sap2010:WorkflowViewState.IdRef="Sequence_10">
@@ -185,44 +179,15 @@
               <FlowStep x:Name="__ReferenceID15" sap2010:WorkflowViewState.IdRef="FlowStep_9">
                 <Sequence sap2010:Annotation.AnnotationText="If a system error occurs during the process, the transaction item's status is updated as Failed (Application)." DisplayName="System Error" sap2010:WorkflowViewState.IdRef="Sequence_5">
                   <Sequence.Variables>
-                    <Variable x:TypeArguments="x:Boolean" Name="QueueRetry" />
+                    <Variable x:TypeArguments="x:Boolean" Default="False" Name="QueueRetry" />
                   </Sequence.Variables>
-                  <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(Uipath.Core.QueueItem))]" DisplayName="If TransactionItem is a QueueItem (SystemError)" sap2010:WorkflowViewState.IdRef="If_4">
+                  <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(System.Data.DataRow))]" DisplayName="If TransactionItem is a QueueItem (SystemError)" sap2010:WorkflowViewState.IdRef="If_4">
                     <If.Then>
                       <Sequence DisplayName="Set transaction item status" sap2010:WorkflowViewState.IdRef="Sequence_7">
-                        <Assign DisplayName="Assign QueueRetry (True)" sap2010:WorkflowViewState.IdRef="Assign_22">
-                          <Assign.To>
-                            <OutArgument x:TypeArguments="x:Boolean">[QueueRetry]</OutArgument>
-                          </Assign.To>
-                          <Assign.Value>
-                            <InArgument x:TypeArguments="x:Boolean">True</InArgument>
-                          </Assign.Value>
-                        </Assign>
-                        <ui:SetTransactionStatus ContinueOnError="{x:Null}" ServiceBaseAddress="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Set transaction status (SystemError)" ErrorType="Application" sap2010:WorkflowViewState.IdRef="SetTransactionStatus_3" Reason="[in_SystemError.Message]" Status="Failed" TransactionItem="[in_TransactionItem]">
-                          <ui:SetTransactionStatus.Output>
-                            <scg:Dictionary x:TypeArguments="x:String, InArgument" />
-                          </ui:SetTransactionStatus.Output>
-                        </ui:SetTransactionStatus>
-                        <Assign DisplayName="Assign RetryNumber from Queue" sap2010:WorkflowViewState.IdRef="Assign_21">
-                          <Assign.To>
-                            <OutArgument x:TypeArguments="x:Int32">[io_RetryNumber]</OutArgument>
-                          </Assign.To>
-                          <Assign.Value>
-                            <InArgument x:TypeArguments="x:Int32">[in_TransactionItem.RetryNo]</InArgument>
-                          </Assign.Value>
-                        </Assign>
+                        <ui:WriteCell Cell="[&quot;D&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (status)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_5" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Неудача" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
+                        <ui:WriteCell Cell="[&quot;E&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (comment)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_6" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="[in_SystemError.Message]" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
                       </Sequence>
                     </If.Then>
-                    <If.Else>
-                      <Assign DisplayName="Assign QueueRetry (False)" sap2010:WorkflowViewState.IdRef="Assign_23">
-                        <Assign.To>
-                          <OutArgument x:TypeArguments="x:Boolean">[QueueRetry]</OutArgument>
-                        </Assign.To>
-                        <Assign.Value>
-                          <InArgument x:TypeArguments="x:Boolean">False</InArgument>
-                        </Assign.Value>
-                      </Assign>
-                    </If.Else>
                   </If>
                   <ui:AddLogFields DisplayName="Add transaction log fields (SystemError)" sap2010:WorkflowViewState.IdRef="AddLogFields_6">
                     <ui:AddLogFields.Fields>
@@ -481,7 +446,6 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="SetTransactionStatus_2" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="464,208" />
       <sap2010:ViewStateData Id="AddLogFields_5" sap:VirtualizedContainerService.HintSize="314,22" />
       <sap2010:ViewStateData Id="LogMessage_16" sap:VirtualizedContainerService.HintSize="314,91" />
@@ -513,18 +477,6 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="242,60" />
-      <sap2010:ViewStateData Id="SetTransactionStatus_3" sap:VirtualizedContainerService.HintSize="242,22" />
-      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="242,60" />
-      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="200,51">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="242,60" />
       <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="467,208" />
       <sap2010:ViewStateData Id="AddLogFields_6" sap:VirtualizedContainerService.HintSize="467,22" />
       <sap2010:ViewStateData Id="LogMessage_17" sap:VirtualizedContainerService.HintSize="200,51">
