@@ -1,0 +1,27 @@
+# PhonesList-Pad: поиск номеров телефонов в папке PhoneNumbers, вывод и запись в Excel.
+# Лабораторная работа 7. Power Automate Desktop (robin).
+
+Folder.GetFiles Folder: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab7\\app\\Data\\Input\\PhoneNumbers''' FileFilter: $'''*.txt''' IncludeSubfolders: False FailOnAccessDenied: True SortBy1: Folder.SortBy.NoSort SortDescending1: False SortBy2: Folder.SortBy.NoSort SortDescending2: False SortBy3: Folder.SortBy.NoSort SortDescending3: False Files=> Files
+
+Variables.CreateNewList List=> List
+
+FOREACH CurrentItem IN Files
+    File.ReadTextFromFile.ReadText File: CurrentItem Encoding: File.TextFileEncoding.UTF8 Content=> FileContens
+    Text.RecognizeEntitiesInText Text: FileContens Mode: Text.RecognizerMode.PhoneNumber Language: Text.RecognizerLanguage.English RecognizedEntities=> RecognizedEntities
+    FOREACH EntityItem IN RecognizedEntities
+        Variables.AddItemToList Item: EntityItem List: List
+    END
+END
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Найденные номера телефонов''' Message: $'''%List%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+Excel.LaunchExcel.Launch UseMachineLocale: False Visible: True LoadAddInsAndMacros: False Instance=> ExcelInstance
+
+SET NewVar TO 1
+
+FOREACH CurrentItem2 IN List
+    Excel.WriteToExcel.WriteCell Instance: ExcelInstance Value: CurrentItem2 Column: $'''A''' Row: NewVar
+    Variables.IncreaseVariable Value: NewVar IncrementValue: 1
+END
+
+Excel.CloseExcel.Close Instance: ExcelInstance

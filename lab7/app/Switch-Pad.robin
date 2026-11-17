@@ -1,0 +1,16 @@
+# Switch-Pad: проверка четности каждой цифры четырехзначного числа.
+# Лабораторная работа 7. Power Automate Desktop (robin).
+# Ветвление по остатку деления на 2 (mod 2) выполнено конструкцией IF/ELSE:
+# в современном PAD экшен Switch отсутствует, IF/ELSE каноническая замена.
+
+Display.InputDialog Title: $'''Проверка числа''' Message: $'''Введите четырехзначное число''' DefaultValue: $'''1234''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> UserInput ButtonPressed=> ButtonPressed
+
+LOOP LoopIndex FROM 0 TO 3 STEP 1
+    Text.GetSubtext.GetSubtext Text: UserInput CharacterPosition: LoopIndex NumberOfChars: 1 Subtext=> SubText
+    Text.ToNumber Text: SubText Number=> TextAsNumber
+    IF (TextAsNumber mod 2) = 0 THEN
+        Display.ShowMessageDialog.ShowMessage Title: $'''Четность цифры''' Message: $'''%SubText% является четным числом''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+    ELSE
+        Display.ShowMessageDialog.ShowMessage Title: $'''Четность цифры''' Message: $'''%SubText% является нечетным числом''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+    END
+END

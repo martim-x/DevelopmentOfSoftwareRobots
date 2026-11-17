@@ -1,0 +1,10 @@
+# FromPdf-Pad: диалог ввода имени, приветствие, извлечение текста из PDF, запись в файл.
+# Лабораторная работа 7. Power Automate Desktop (robin).
+
+Display.InputDialog Title: $'''Лабораторная работа 7''' Message: $'''Введите ваше имя''' DefaultValue: $'''Иван''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> UserInput ButtonPressed=> ButtonPressed
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Приветствие''' Message: $'''Здравствуйте, %UserInput%!''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+Pdf.ExtractTextFromPDF.ExtractText PDFFile: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab7\\app\\Data\\Input\\SourceText.pdf''' DetectLayout: False Password: $'''' ExtractedText=> ExtractedPDFText
+
+File.WriteText File: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab7\\app\\Data\\Output\\TextFromPdf.txt''' TextToWrite: ExtractedPDFText AppendNewLine: True IfFileExists: File.IfFileExists.Overwrite Encoding: File.FileEncoding.UTF8

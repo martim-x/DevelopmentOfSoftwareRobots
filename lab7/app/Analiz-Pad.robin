@@ -1,0 +1,16 @@
+# Analiz-Pad: анализ резюме из папки Resumes, извлечение адресов электронной почты.
+# Лабораторная работа 7. Power Automate Desktop (robin).
+
+Folder.GetFiles Folder: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab7\\app\\Data\\Input\\Resumes''' FileFilter: $'''*.txt''' IncludeSubfolders: False FailOnAccessDenied: True SortBy1: Folder.SortBy.NoSort SortDescending1: False SortBy2: Folder.SortBy.NoSort SortDescending2: False SortBy3: Folder.SortBy.NoSort SortDescending3: False Files=> Files
+
+Variables.CreateNewList List=> List
+
+FOREACH CurrentItem IN Files
+    File.ReadTextFromFile.ReadText File: CurrentItem Encoding: File.TextFileEncoding.UTF8 Content=> FileContens
+    Text.RecognizeEntitiesInText Text: FileContens Mode: Text.RecognizerMode.Email Language: Text.RecognizerLanguage.English RecognizedEntities=> RecognizedEntities
+    FOREACH EntityItem IN RecognizedEntities
+        Variables.AddItemToList Item: EntityItem List: List
+    END
+END
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Найденные адреса электронной почты''' Message: $'''%List%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed

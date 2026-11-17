@@ -1,0 +1,21 @@
+# ExcelExamen-Pad: чтение оценок из Examen.xlsx, поиск фамилии, вывод оценки.
+# Лабораторная работа 7. Power Automate Desktop (robin).
+
+Excel.LaunchExcel.LaunchAndOpen Path: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab7\\app\\Data\\Examen.xlsx''' Visible: True ReadOnly: False LoadAddInsAndMacros: False UseMachineLocale: False Instance=> ExcelInstance
+
+Excel.ReadFromExcel.ReadCells Instance: ExcelInstance StartColumn: $'''2''' StartRow: 2 EndColumn: $'''2''' EndRow: 7 FirstLineIsHeader: False GetCellContentsMode: Excel.GetCellContentsMode.TypedValues RangeValue=> ExcelData
+
+Display.InputDialog Title: $'''Поиск студента''' Message: $'''Введите фамилию''' DefaultValue: $'''Смирнов''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> UserInput ButtonPressed=> ButtonPressed
+
+SET NewVar TO 2
+
+FOREACH CurrentItem IN ExcelData
+    IF CurrentItem = UserInput THEN
+        Excel.ReadFromExcel.ReadCells Instance: ExcelInstance StartColumn: $'''2''' StartRow: NewVar EndColumn: $'''3''' EndRow: NewVar FirstLineIsHeader: False GetCellContentsMode: Excel.GetCellContentsMode.TypedValues RangeValue=> ExcelData2
+    END
+    Variables.IncreaseVariable Value: NewVar IncrementValue: 1
+END
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Оценка студента''' Message: $'''%ExcelData2%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+Excel.CloseExcel.Close Instance: ExcelInstance
