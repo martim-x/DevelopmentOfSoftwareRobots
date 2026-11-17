@@ -4,7 +4,7 @@
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
  xmlns:s="clr-namespace:System;assembly=mscorlib"
- xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
  xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
@@ -83,9 +83,11 @@
             <Sequence sap2010:Annotation.AnnotationText="If the transaction item is processed without any exceptions, its status is updated as Successful.&#xA;" DisplayName="Success" sap2010:WorkflowViewState.IdRef="Sequence_6">
               <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(System.Data.DataRow))]" DisplayName="If TransactionItem is a QueueItem (Success)" sap2010:WorkflowViewState.IdRef="If_2">
                 <If.Then>
+                      <Sequence DisplayName="Write transaction status" sap2010:WorkflowViewState.IdRef="Sequence_wrap_WriteCell_1">
                   <ui:WriteCell Cell="[&quot;D&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (status)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_1" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Успешно" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
                   <ui:WriteCell Cell="[&quot;E&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (comment)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_2" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Обработано!" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
-                </If.Then>
+                </Sequence>
+                    </If.Then>
               </If>
               <Sequence sap2010:Annotation.AnnotationText="Includes custom log fields to the log message.&#xA;They are removed after logging to prevent duplicated status messages about a single transaction." DisplayName="Log Successful with additional logging fields" sap2010:WorkflowViewState.IdRef="Sequence_9">
                 <ui:AddLogFields DisplayName="Add transaction log fields (Successful)" sap2010:WorkflowViewState.IdRef="AddLogFields_4">
@@ -142,8 +144,10 @@
                 <Sequence sap2010:Annotation.AnnotationText="If a BussinessRuleException is thrown during the process, the transaction item's status is updated as Failed (BusinessRuleException).&#xA;" DisplayName="Business Rule Exception" sap2010:WorkflowViewState.IdRef="Sequence_3">
                   <If Condition="[in_TransactionItem isNot Nothing AndAlso (in_TransactionItem.GetType is GetType(System.Data.DataRow))]" DisplayName="If TransactionItem is a QueueItem (BusinessRuleException)" sap2010:WorkflowViewState.IdRef="If_3">
                     <If.Then>
+                      <Sequence DisplayName="Write transaction status" sap2010:WorkflowViewState.IdRef="Sequence_wrap_WriteCell_3">
                       <ui:WriteCell Cell="[&quot;D&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (status)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_3" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="Пропущено" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
                       <ui:WriteCell Cell="[&quot;E&quot;+(io_TransactionNumber+2).ToString]" DisplayName="Write Cell (comment)" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="WriteCell_4" SheetName="[in_Config(&quot;Input_SheetName&quot;).ToString]" Text="[in_BusinessRuleException.Message]" WorkbookPath="[in_Config(&quot;UIDemo_InputFile&quot;).ToString]" />
+                    </Sequence>
                     </If.Then>
                   </If>
                   <Sequence sap2010:Annotation.AnnotationText="Includes custom log fields to the log message.&#xA;They are removed after logging to prevent duplicated status messages about a single transaction." DisplayName="Log BusinessRuleException with additional logging fields" sap2010:WorkflowViewState.IdRef="Sequence_10">

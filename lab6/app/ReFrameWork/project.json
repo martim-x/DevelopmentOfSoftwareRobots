@@ -6,7 +6,8 @@
   "dependencies": {
     "UiPath.System.Activities": "18.3.6877.28276",
     "UiPath.UIAutomation.Activities": "19.10.1",
-    "UiPath.Excel.Activities": "2.8.5"
+    "UiPath.Excel.Activities": "2.8.5",
+    "UiPath.Credentials.Activities": "2.0.0"
   },
   "webServices": [],
   "entitiesStores": [],

@@ -70,16 +70,16 @@
     <ui:LogMessage DisplayName="Log message (Begin process)" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[&quot;Начало процесса&quot;]" />
     <If Condition="[IsNumeric(in_TransactionItem(&quot;CashIn&quot;)) AndAlso IsNumeric(in_TransactionItem(&quot;OnUsCheck&quot;)) AndAlso IsNumeric(in_TransactionItem(&quot;NotOnUsCheck&quot;))]" DisplayName="If data is numeric" sap:VirtualizedContainerService.HintSize="314,439" sap2010:WorkflowViewState.IdRef="If_1">
       <If.Then>
-        <ui:AttachWindow DisplayName="Attach Window" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="AttachWindow_1" Selector="&lt;wnd app='uidemo.exe' /&gt;" TimeoutMS="{x:Null}">
-          <ui:AttachWindow.Body>
+        <ui:WindowScope DisplayName="Attach Window" sap:VirtualizedContainerService.HintSize="314,87" sap2010:WorkflowViewState.IdRef="AttachWindow_1" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;" TimeoutMS="{x:Null}">
+          <ui:WindowScope.Body>
             <ActivityAction x:TypeArguments="x:Object">
               <ActivityAction.Argument>
                 <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
               </ActivityAction.Argument>
               <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="314,402" sap2010:WorkflowViewState.IdRef="Sequence_2">
-                <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'Cash In'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_1" SimulateType="True" Text="[in_TransactionItem(&quot;CashIn&quot;).ToString]">
+                <ui:TypeInto ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'Cash In'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_1" SimulateType="True" Text="[in_TransactionItem(&quot;CashIn&quot;).ToString]">
                   <ui:TypeInto.Target>
-                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="{x:Null}" Selector="&lt;wnd app='uidemo.exe' /&gt;&lt;wnd ctrlname='edCashIn' /&gt;">
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='1' /&gt;">
                       <ui:Target.TimeoutMS>
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:Target.TimeoutMS>
@@ -89,9 +89,9 @@
                     </ui:Target>
                   </ui:TypeInto.Target>
                 </ui:TypeInto>
-                <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'On Us Check'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_2" SimulateType="True" Text="[in_TransactionItem(&quot;OnUsCheck&quot;).ToString]">
+                <ui:TypeInto ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'On Us Check'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_2" SimulateType="True" Text="[in_TransactionItem(&quot;OnUsCheck&quot;).ToString]">
                   <ui:TypeInto.Target>
-                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="{x:Null}" Selector="&lt;wnd app='uidemo.exe' /&gt;&lt;wnd ctrlname='edOnUsCheck' /&gt;">
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='2' /&gt;">
                       <ui:Target.TimeoutMS>
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:Target.TimeoutMS>
@@ -101,9 +101,9 @@
                     </ui:Target>
                   </ui:TypeInto.Target>
                 </ui:TypeInto>
-                <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'Not On Us Check'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_3" SimulateType="True" Text="[in_TransactionItem(&quot;NotOnUsCheck&quot;).ToString]">
+                <ui:TypeInto ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" Activate="True" DisplayName="Type Into 'Not On Us Check'" sap:VirtualizedContainerService.HintSize="314,168" sap2010:WorkflowViewState.IdRef="TypeInto_3" SimulateType="True" Text="[in_TransactionItem(&quot;NotOnUsCheck&quot;).ToString]">
                   <ui:TypeInto.Target>
-                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="{x:Null}" Selector="&lt;wnd app='uidemo.exe' /&gt;&lt;wnd ctrlname='edNotOnUsCheck' /&gt;">
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.EDIT.app.0.34f5582_r6_ad1' idx='3' /&gt;">
                       <ui:Target.TimeoutMS>
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:Target.TimeoutMS>
@@ -113,9 +113,9 @@
                     </ui:Target>
                   </ui:TypeInto.Target>
                 </ui:TypeInto>
-                <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateMove="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Accept'" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT" SimulateClick="True">
+                <ui:Click DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Accept'" sap:VirtualizedContainerService.HintSize="314,106" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT" SimulateClick="True">
                   <ui:Click.Target>
-                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="{x:Null}" Selector="&lt;wnd app='uidemo.exe' /&gt;&lt;wnd ctrlname='btnAccept' /&gt;">
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="&lt;wnd app='uidemo.exe' title='UiDemo' /&gt;&lt;wnd cls='WindowsForms10.BUTTON.app.0.34f5582_r6_ad1' /&gt;">
                       <ui:Target.TimeoutMS>
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:Target.TimeoutMS>
@@ -127,8 +127,8 @@
                 </ui:Click>
               </Sequence>
             </ActivityAction>
-          </ui:AttachWindow.Body>
-        </ui:AttachWindow>
+          </ui:WindowScope.Body>
+        </ui:WindowScope>
       </If.Then>
       <If.Else>
         <Throw DisplayName="Throw (not numeric data)" sap:VirtualizedContainerService.HintSize="242,22" sap2010:WorkflowViewState.IdRef="Throw_1" Exception="[new BusinessRuleException(&quot;Записи не числовые - обработка невозможна&quot;)]" />
