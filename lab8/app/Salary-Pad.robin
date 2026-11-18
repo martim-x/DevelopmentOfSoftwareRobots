@@ -1,0 +1,111 @@
+# Salary-Pad: добавление записей в базу данных «Зарплата» и расчёт начислений
+# (задание 8-3 методички, labs/РПР_Практикум 2023.pdf, стр. 51-52).
+# Лабораторная работа 8. Power Automate Desktop (robin).
+#
+# База и таблица создаются скриптом Data/create_salary.sql (выполняется один раз
+# в SSMS по методичке). Строка подключения ниже использует Server=localhost —
+# заменить на имя фактического экземпляра SQL Server (см. README).
+
+Database.OpenConnection ConnectionString: $'''DRIVER={SQL Server};Server=localhost;Trusted_Connection=Yes;Database=Salary''' SQLConnection=> SQLConnection
+
+Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''select count(*) from Зарплата''' Timeout: 30 QueryResult=> QueryResult
+
+SET CountAsText TO $'''%QueryResult[0][0]%'''
+
+Text.ToNumber Text: CountAsText Number=> CountOfRows
+
+IF CountOfRows = 0 THEN
+    Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''База данных пуста''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+ELSE
+    Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''База данных содержит записи. Желаете их удалить?''' Icon: Display.Icon.Question Buttons: Display.Buttons.YesNo DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> DeleteButton
+    IF DeleteButton = $'''Yes''' THEN
+        Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''truncate table Зарплата''' Timeout: 30 QueryResult=> QueryResult
+    END
+END
+
+Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''Желаете добавить новые записи?''' Icon: Display.Icon.Question Buttons: Display.Buttons.YesNo DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> AddButton
+
+SET ConfirmButton TO $'''OK'''
+
+LOOP WHILE (AddButton = $'''Yes''')
+    SET AddBool TO %False%
+
+    Display.InputDialog Title: $'''Новая запись''' Message: $'''Введите ФИО''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> Name ButtonPressed=> ConfirmButton
+
+    IF ConfirmButton = $'''OK''' THEN
+        Display.InputDialog Title: $'''Новая запись''' Message: $'''Введите должность''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> Position ButtonPressed=> ConfirmButton
+
+        IF ConfirmButton = $'''OK''' THEN
+            Display.InputDialog Title: $'''Новая запись''' Message: $'''Введите стаж (лет)''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> Experience ButtonPressed=> ConfirmButton
+
+            IF ConfirmButton = $'''OK''' THEN
+                Display.InputDialog Title: $'''Новая запись''' Message: $'''Введите оклад (руб)''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> BaseSalary ButtonPressed=> ConfirmButton
+
+                IF ConfirmButton = $'''OK''' THEN
+                    Display.InputDialog Title: $'''Новая запись''' Message: $'''Введите премию (руб)''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> Premium ButtonPressed=> ConfirmButton
+
+                    IF ConfirmButton = $'''OK''' THEN
+                        SET AddBool TO %True%
+                    END
+                END
+            END
+        END
+    END
+
+    IF AddBool = %True% THEN
+        Text.ToNumber Text: Experience Number=> Experience
+        Text.ToNumber Text: BaseSalary Number=> BaseSalary
+        Text.ToNumber Text: Premium Number=> Premium
+
+        Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''insert into Зарплата (ФИО, Должность, [Стаж, лет], [Оклад, руб], [Премия, руб]) values ('%Name%', '%Position%', %Experience%, %BaseSalary%, %Premium%)''' Timeout: 30 QueryResult=> QueryResult
+    END
+
+    Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''Желаете создать ещё одну запись?''' Icon: Display.Icon.Question Buttons: Display.Buttons.YesNo DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> AddButton
+END
+
+Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''select count(*) from Зарплата''' Timeout: 30 QueryResult=> QueryResult
+
+SET CountAsText TO $'''%QueryResult[0][0]%'''
+
+Text.ToNumber Text: CountAsText Number=> CountOfRows
+
+IF CountOfRows > 0 THEN
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = 0 where [Стаж, лет] = 0''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = [Оклад, руб] * 0.05 where [Стаж, лет] between 1 and 5''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = [Оклад, руб] * 0.1 where [Стаж, лет] between 6 and 10''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = [Оклад, руб] * 0.15 where [Стаж, лет] between 11 and 15''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = [Оклад, руб] * 0.2 where [Стаж, лет] > 15''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Надбавка за стаж, руб] = round([Надбавка за стаж, руб], 2), [Итого, руб] = round(([Оклад, руб] + [Премия, руб] + [Надбавка за стаж, руб]), 2)''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Налоги, руб] = round(([Итого, руб] * 0.13), 2)''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''update Зарплата set [Получить, руб] = round([Итого, руб] - [Налоги, руб], 2)''' Timeout: 30 QueryResult=> QueryResult
+
+    Database.ExecuteSqlStatement Connection: SQLConnection Statement: $'''select * from Зарплата''' Timeout: 30 QueryResult=> Result
+
+    Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''База данных заполнена, начисления рассчитаны''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+    SET Index TO 0
+
+    LOOP WHILE (Index < Result.RowsCount)
+        Display.ShowMessageDialog.ShowMessage Title: $'''Сотрудник %Index + 1% из %Result.RowsCount%''' Message: $'''ФИО: %Result[Index][0]%
+Должность: %Result[Index][1]%
+Стаж: %Result[Index][2]%
+Оклад: %Result[Index][3]%
+Премия: %Result[Index][4]%
+Надбавка за стаж: %Result[Index][5]%
+Налоги: %Result[Index][7]%
+Итого получено: %Result[Index][8]%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+        Variables.IncreaseVariable Value: Index IncrementValue: 1
+    END
+ELSE
+    Display.ShowMessageDialog.ShowMessage Title: $'''База данных «Зарплата»''' Message: $'''База данных не содержит записей''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+END
+
+Database.CloseConnection Connection: SQLConnection

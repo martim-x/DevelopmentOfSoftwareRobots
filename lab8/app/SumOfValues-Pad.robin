@@ -1,0 +1,22 @@
+# SumOfValues-Pad: самостоятельная задача (задание 8-4 методички).
+# Распознавание числовых значений с изображения ValuesForSum.jpg, вычисление суммы,
+# вывод результата и запись его в Data/Output/SumResult.txt.
+# Лабораторная работа 8. Power Automate Desktop (robin).
+# Изображение содержит заголовок "Числа для суммирования" и числа 12, 8, 15, 5;
+# заголовок отсеивается регулярным выражением (берутся только строки целиком из цифр).
+# Ожидаемая сумма: 12 + 8 + 15 + 5 = 40.
+
+OCR.ExtractTextWithOCR.ExtractTextFromFileWithWindowsOcr ImageFile: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab8\\app\\Data\\Input\\ValuesForSum.jpg''' ImageWidthMultiplier: 1 ImageHeightMultiplier: 1 WindowsOcrLanguage: OCR.WindowsOcrLanguage.Russian OcrText=> OcrText
+
+Text.ParseText.Parse Text: OcrText TextToFind: $'''(?m)^\\d+$''' IsRegularExpression: True StartingPosition: 0 IgnoreCase: False Result=> Numbers
+
+SET Sum TO 0
+
+FOREACH CurrentItem IN Numbers
+    Text.ToNumber Text: CurrentItem Number=> CurrentNumber
+    Variables.IncreaseVariable Value: Sum IncrementValue: %CurrentNumber%
+END
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Сумма значений''' Message: $'''Сумма распознанных значений: %Sum%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+File.WriteText File: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab8\\app\\Data\\Output\\SumResult.txt''' TextToWrite: $'''Сумма распознанных значений: %Sum%''' AppendNewLine: True IfFileExists: File.IfFileExists.Overwrite Encoding: File.FileEncoding.UTF8

@@ -1,0 +1,25 @@
+# Sreenshot-Pad: серия снимков экрана с уникальными именами (дата/время),
+# открытие снимка в Paint, повтор по горячей клавише Ctrl-Q.
+# Лабораторная работа 8. Power Automate Desktop (robin).
+# Задание 8-1 методички (labs/РПР_Практикум 2023.pdf, стр. 46-47).
+# Папка Data/Output/Скриншоты создается заранее (по методичке) и уже есть в репозитории.
+
+LABEL Begin
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Скриншот''' Message: $'''Нажмите Ctrl-Q''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+MouseAndKeyboard.WaitForShortcutKey.WaitForShortcutKey InputKeys: ['Ctrl+Q'] IndexOfShortcutKeyPressed=> IndexOfShortcutKeyPressed
+
+DateTime.GetCurrentDateTime.Local DateTimeFormat: DateTime.DateTimeFormat.DateAndTime CurrentDateTime=> CurrentDateTime
+
+SET ScreenshotFile TO $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab8\\app\\Data\\Output\\Скриншоты\\%CurrentDateTime.Month%_%CurrentDateTime.Day%_%CurrentDateTime.Hour%_%CurrentDateTime.Second%.jpg'''
+
+Workstation.TakeScreenshot.TakeScreenshotAndSaveToFile File: $'''%ScreenshotFile%''' ImageFormat: System.ImageFormat.Jpg
+
+System.RunApplication.ApplicationPath ApplicationPath: $'''C:\\Windows\\System32\\mspaint.exe''' CommandLineArguments: $'''%ScreenshotFile%''' WorkingDirectory: $'''C:\\Users\\timof\\Documents\\Visual Studio Code\\DevelopmentOfSoftwareRobots\\lab8\\app\\Data\\Output\\Скриншоты''' WindowStyle: System.WindowStyle.Normal AfterWindowClosed: System.AfterWindowClosed.DoNothing
+
+Display.InputDialog Title: $'''Скриншот''' Message: $'''Продолжать? (1-да, 0-нет)''' DefaultValue: $'''1''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> UserInput ButtonPressed=> ButtonPressed
+
+IF UserInput = $'''1''' THEN
+    GOTO Begin
+END

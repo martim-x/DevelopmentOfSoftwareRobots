@@ -1,0 +1,54 @@
+# News2-Pad: извлечение заголовков новостей по задаваемой теме (задание 8-2 методички).
+# Лабораторная работа 8. Power Automate Desktop (robin).
+#
+# Источник: yandex.by/news по методичке недоступен с этой машины (TLS-ошибка при
+# проверке 18.11.2026). Использован проверенный замещающий источник devby.io/news
+# (HTTP 200, заголовки в HTML-классе card__title).
+# Тема вводится в поле поиска сайта (input.menu__input-search) и подтверждается Enter;
+# поиска сайта ведёт на Google Custom Search (google.com/cse), заголовки результатов
+# подбираются в PAD (элементы в iframe; заглушки Header 1 / Header 2 см. в README).
+
+Display.InputDialog Title: $'''Новости''' Message: $'''Введите тему для поиска''' InputType: Display.InputType.SingleLine IsTopMost: False UserInput=> UserInput ButtonPressed=> ButtonPressed
+
+Variables.CreateNewList List=> List
+
+WebAutomation.LaunchEdge.LaunchEdge TabUrl: $'''https://devby.io/news''' WindowState: WebAutomation.BrowserWindowState.Maximized ClearCache: False ClearCookies: False NewInstance: True PrivateMode: False BrowserInstance=> Browser
+
+WebAutomation.FocusTextfieldOnWebPage.FocusTextfield BrowserInstance: Browser Control: appmask['Web Page']['Search Field']
+
+MouseAndKeyboard.SendKeys.FocusAndSendKeys TextToSend: $'''%UserInput%{Return}''' DelayBetweenKeystrokes: 10 SendTextAsHardwareKeys: False
+
+WebAutomation.GetDetailsOfElement BrowserInstance: Browser Control: appmask['Search Results']['Header 1'] AttributeName: $'''Own Text''' AttributeValue=> AttributeValue
+
+Variables.AddItemToList Item: AttributeValue List: List
+
+WebAutomation.GetDetailsOfElement BrowserInstance: Browser Control: appmask['Search Results']['Header 2'] AttributeName: $'''Own Text''' AttributeValue=> AttributeValue2
+
+Variables.AddItemToList Item: AttributeValue2 List: List
+
+Display.ShowMessageDialog.ShowMessage Title: $'''Заголовки новостей''' Message: $'''%List%''' Icon: Display.Icon.Information Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+WebAutomation.CloseWebBrowser.CloseWebBrowser BrowserInstance: Browser
+
+# [ControlRepository][PowerAutomateDesktop]
+# ВНИМАНИЕ: заглушки. Селектор Search Field проверен по HTML devby.io (input.menu__input-search).
+# Селекторы Header 1 / Header 2 (результаты поиска в iframe Google CSE) в PAD НЕ валидировались
+# и подлежат подбору заново при вставке (см. README, раздел Ограничения).
+{
+  "ControlRepositorySymbols": [
+    {
+      "Name": "appmask",
+      "ImportMetadata": {
+        "DisplayName": "Computer",
+        "ConnectionString": "",
+        "Type": "Local"
+      },
+      "Repository": "{\r\n  \"Screens\": [\r\n    {\r\n      \"Controls\": [\r\n        {\r\n          \"AutomationProtocol\": \"uia3\",\r\n          \"ScreenShot\": null,\r\n          \"ElementTypeName\": \"Web Page\",\r\n          \"InstanceId\": null,\r\n          \"Name\": \"Web Page\",\r\n          \"SelectorCount\": 1,\r\n          \"Selectors\": [\r\n            {\r\n              \"CustomSelector\": \":desktop > domcontainer\",\r\n              \"Elements\": [],\r\n              \"Ignore\": false,\r\n              \"IsCustom\": true,\r\n              \"IsWindowsInstance\": false,\r\n              \"Order\": 0\r\n            }\r\n          ],\r\n          \"Tag\": \"domcontainer\"\r\n        },\r\n        {\r\n          \"AutomationProtocol\": \"uia3\",\r\n          \"ScreenShot\": null,\r\n          \"ElementTypeName\": \"Input text\",\r\n          \"InstanceId\": null,\r\n          \"Name\": \"Search Field\",\r\n          \"SelectorCount\": 1,\r\n          \"Selectors\": [\r\n            {\r\n              \"CustomSelector\": \"> body input.menu__input-search\",\r\n              \"Elements\": [],\r\n              \"Ignore\": false,\r\n              \"IsCustom\": true,\r\n              \"IsWindowsInstance\": false,\r\n              \"Order\": 0\r\n            }\r\n          ],\r\n          \"Tag\": \"input\"\r\n        }\r\n      ],\r\n      \"ScreenShot\": null,\r\n      \"ElementTypeName\": \"Web Page\",\r\n      \"InstanceId\": null,\r\n      \"Name\": \"Web Page\",\r\n      \"SelectorCount\": 1,\r\n      \"Selectors\": [\r\n        {\r\n          \"CustomSelector\": \":desktop > domcontainer\",\r\n          \"Elements\": [],\r\n          \"Ignore\": false,\r\n          \"IsCustom\": true,\r\n          \"IsWindowsInstance\": false,\r\n          \"Order\": 0\r\n        }\r\n      ],\r\n      \"Tag\": \"domcontainer\"\r\n    },\r\n    {\r\n      \"Controls\": [\r\n        {\r\n          \"AutomationProtocol\": \"uia3\",\r\n          \"ScreenShot\": null,\r\n          \"ElementTypeName\": \"Header\",\r\n          \"InstanceId\": null,\r\n          \"Name\": \"Header 1\",\r\n          \"SelectorCount\": 1,\r\n          \"Selectors\": [\r\n            {\r\n              \"CustomSelector\": \"> body h3.gs-title:eq(0)\",\r\n              \"Elements\": [],\r\n              \"Ignore\": false,\r\n              \"IsCustom\": true,\r\n              \"IsWindowsInstance\": false,\r\n              \"Order\": 0\r\n            }\r\n          ],\r\n          \"Tag\": \"h3\"\r\n        },\r\n        {\r\n          \"AutomationProtocol\": \"uia3\",\r\n          \"ScreenShot\": null,\r\n          \"ElementTypeName\": \"Header\",\r\n          \"InstanceId\": null,\r\n          \"Name\": \"Header 2\",\r\n          \"SelectorCount\": 1,\r\n          \"Selectors\": [\r\n            {\r\n              \"CustomSelector\": \"> body h3.gs-title:eq(1)\",\r\n              \"Elements\": [],\r\n              \"Ignore\": false,\r\n              \"IsCustom\": true,\r\n              \"IsWindowsInstance\": false,\r\n              \"Order\": 0\r\n            }\r\n          ],\r\n          \"Tag\": \"h3\"\r\n        }\r\n      ],\r\n      \"ScreenShot\": null,\r\n      \"ElementTypeName\": \"Web Page\",\r\n      \"InstanceId\": null,\r\n      \"Name\": \"Search Results\",\r\n      \"SelectorCount\": 1,\r\n      \"Selectors\": [\r\n        {\r\n          \"CustomSelector\": \":desktop > domcontainer\",\r\n          \"Elements\": [],\r\n          \"Ignore\": false,\r\n          \"IsCustom\": true,\r\n          \"IsWindowsInstance\": false,\r\n          \"Order\": 0\r\n        }\r\n      ],\r\n      \"Tag\": \"domcontainer\"\r\n    }\r\n  ],\r\n  \"Version\": 1\r\n}"
+    }
+  ],
+  "ImageRepositorySymbol": {
+    "Name": "imgrepo",
+    "ImportMetadata": {},
+    "Repository": "{\r\n  \"Folders\": [],\r\n  \"Images\": [],\r\n  \"Version\": 1\r\n}"
+  }
+}
